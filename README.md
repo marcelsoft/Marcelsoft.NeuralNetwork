@@ -2,7 +2,7 @@
 
 A high-performance, multi-layer neural network library for C# built on top of [Math.NET Numerics](https://numerics.mathdotnet.com/). This library provides a flexible framework for building, training, and deploying neural networks with support for multiple high-performance computing backends.
 
-[![License](https://img.shields.io/badge/license-GPL%203.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Features
 
