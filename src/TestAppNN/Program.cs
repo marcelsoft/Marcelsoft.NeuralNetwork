@@ -92,67 +92,6 @@ namespace TestAppNN
             Console.WriteLine($"Input: {string.Join(" ", input)}");
             Console.WriteLine($"Expected output: {string.Join(" ", expected)}");
             Console.WriteLine($"Real output: {string.Join(" ", output)}");  
-        }        
-
-        private static void QuotesLearning()
-        {
-            var steps = GetStepsNumber(940, Binance.Net.Enums.KlineInterval.OneHour);
-            var dataCache = new DataCache();
-            var quotes = dataCache.GetQuotes(steps, "BTCUSDT", Binance.Net.Enums.KlineInterval.OneHour);
-            var data = DataNormalizator.GetMovements(quotes);
-
-            var rnn = new NeuralNetwork();
-            rnn.CreateLayer(10, 400);
-            rnn.CreateLayer(400, 4);
-
-            var learningRate = 0.1;
-            var numEpochs = 5000;
-            var inputs = new List<Vector<double>>();
-            var outputs = new List<Vector<double>>();
-
-            // Loop over input sequences
-            for (var i = 0; i < data.Count - 28; i++)
-            {
-                var normalizedInput = DataNormalizator.Normalize(data.GetRange(i, 10));
-                var normalizedOutput = DataNormalizator.Normalize(data.GetRange(i + 10, 4));
-
-                // Forward pass
-                inputs.Add(Vector<double>.Build.DenseOfArray(normalizedInput.ToArray()));
-                outputs.Add(Vector<double>.Build.DenseOfArray(normalizedOutput.ToArray()));
-            }
-
-            var trainer = new Trainer(rnn, inputs, outputs);
-            trainer.Train(numEpochs, learningRate);
-
-            // Test RNN on new input sequence
-            var random = new Random();
-            var testindex = (int)random.NextInt64(100);
-            var input = inputs[testindex];
-            var output = rnn.Forward(input.ToRowMatrix());
-            var expected = outputs[testindex];
-            Console.WriteLine($"Input: {input}");
-            Console.WriteLine($"Output: {output}");
-            Console.WriteLine($"Expected: {expected}");
-        }
-
-        private static int GetStepsNumber(int daysCount, Binance.Net.Enums.KlineInterval interval)
-        {
-            int stepsInDay = 0;
-            switch (interval)
-            {
-                case Binance.Net.Enums.KlineInterval.OneDay: stepsInDay = 1; break;
-                case Binance.Net.Enums.KlineInterval.FourHour: stepsInDay = 6; break;
-                case Binance.Net.Enums.KlineInterval.OneHour: stepsInDay = 24; break;
-                case Binance.Net.Enums.KlineInterval.FifteenMinutes: stepsInDay = 96; break;
-                case Binance.Net.Enums.KlineInterval.FiveMinutes: stepsInDay = 288; break;
-                case Binance.Net.Enums.KlineInterval.OneMinute: stepsInDay = 1440; break;
-            }
-
-            return daysCount * stepsInDay;
-        }
-
-        private static void TestSaving()
-        {
         }
     }
 }
