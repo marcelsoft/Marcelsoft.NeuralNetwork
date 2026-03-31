@@ -37,8 +37,8 @@ namespace Marcelsoft.NeuralNetwork
             var o = Utils.Sigmoid(input * Weights + Biases);
             Output = o;
             // Sigmoid derivative: d/dz σ(z) = σ(z) * (1 - σ(z))
-            // Since o is already σ(z), compute o * (1 - o) directly
-            OutputDerivative = o.PointwiseMultiply(1 - o);
+            // Since o is already σ(z), compute element-wise to avoid a temporary matrix
+            OutputDerivative = o.Map(v => v * (1 - v));
            
             return o;
         }

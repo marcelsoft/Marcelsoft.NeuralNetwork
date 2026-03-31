@@ -21,8 +21,11 @@ namespace Marcelsoft.NeuralNetwork.Training
             var learningCurve = learningRate / numEpochs;
             var progresStep = numEpochs / 10;
 
+            var inputMatrixes = _inputs.Select(i => i.ToRowMatrix()).ToList();
+            var targetMatrixes = _expectedOutputs.Select(o => o.ToRowMatrix()).ToList();
+
             var bestNetwork = _network.Clone();
-            var bestNetworkLoss = CalculateLoss(bestNetwork, _inputs, _expectedOutputs);
+            var bestNetworkLoss = CalculateLoss(bestNetwork, inputMatrixes, targetMatrixes);
 
             Console.WriteLine($"Initial loss: {bestNetworkLoss}");
 
@@ -30,13 +33,13 @@ namespace Marcelsoft.NeuralNetwork.Training
             for (var epoch = 0; epoch < numEpochs; epoch++)
             {
                 // Loop over input sequences
-                for (var i = 0; i < _inputs.Count; i++)
+                for (var i = 0; i < inputMatrixes.Count; i++)
                 {
                     // Forward pass
-                    var input = _inputs[i].ToRowMatrix();      
+                    var input = inputMatrixes[i];      
                     //output is not used directly, but it is needed to calculate the output error and the hidden layer errors         
                     var output = _network.Forward(input);
-                    var target = _expectedOutputs[i].ToRowMatrix();
+                    var target = targetMatrixes[i];
 
                     var outputLayer = _network.Layers.Last();
                     var outputError = (outputLayer.Output - target).PointwiseMultiply(outputLayer.OutputDerivative);
@@ -62,7 +65,7 @@ namespace Marcelsoft.NeuralNetwork.Training
                     }
                 }
 
-                var totalLoss = CalculateLoss(_network, _inputs, _expectedOutputs);
+                var totalLoss = CalculateLoss(_network, inputMatrixes, targetMatrixes);
                 if (totalLoss < bestNetworkLoss)
                 {
                     bestNetworkLoss = totalLoss;

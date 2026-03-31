@@ -31,8 +31,8 @@ namespace TestAppNN
             Console.WriteLine("Create NeuralNetowork structure.");
             var rnn = new NeuralNetwork();
             rnn.CreateLayer(4, 400);
-            rnn.CreateLayer(400, 30);
-            rnn.CreateLayer(30, 4);
+            rnn.CreateLayer(400, 100);
+            rnn.CreateLayer(100, 4);
 
             Console.WriteLine("Check NN before learning:");
             CheckNN(rnn);
@@ -66,7 +66,7 @@ namespace TestAppNN
 
             // learning parameters: learning rate and number of epochs
             var learningRate = 0.05;
-            var numEpochs = 5000;
+            var numEpochs = 7000;
 
             var inputs = new List<Vector<double>>();
             var outputs = new List<Vector<double>>();

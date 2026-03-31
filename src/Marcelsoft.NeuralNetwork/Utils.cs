@@ -46,10 +46,6 @@ namespace Marcelsoft.NeuralNetwork
 
         public static double Sigmoid(double d)
         {
-            if (double.IsNaN(d))
-            {
-                Console.WriteLine("dupa");
-            }
             return 1 / (1 + Math.Exp(-d));
         }
 

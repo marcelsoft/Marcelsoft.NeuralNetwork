@@ -6,18 +6,16 @@ namespace Marcelsoft.NeuralNetwork.Training
     {
         protected double CalculateLoss(
             NeuralNetwork network,
-            List<Vector<double>> inputs,
-            List<Vector<double>> expectedOutputs)
+            List<Matrix<double>> inputs,
+            List<Matrix<double>> expectedOutputs)
         {
             var totalLoss = 0.0;
             for (var i = 0; i < inputs.Count; i++)
             {
-                var x = inputs[i].ToRowMatrix();
+                var x = inputs[i];
                 var y = network.FastForward(x);
-                var target = expectedOutputs[i];
-                var vy = Vector<double>.Build.DenseOfEnumerable(y.Row(0));
-                var loss = target - vy;
-                totalLoss += Math.Abs(loss.Enumerate().Select(Math.Abs).Sum());
+                var loss = expectedOutputs[i] - y;
+                totalLoss += loss.L1Norm();
             }
 
             return totalLoss / inputs.Count;
